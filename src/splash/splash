@@ -47,6 +47,8 @@ EOF
 }
 
 restore() {
+	echo 'Restoring splash screens from backup...'
+
 	for splash in "$BACKUP_DIR"/*.png; do
 		splash="${splash##*/}"
 		printf '%s...' "$splash"
@@ -59,9 +61,13 @@ restore() {
 		cp -a -f "$BACKUP_DIR/$splash" "$SYS_DIR"
 		echo 'OK'
 	done
+
+	echo 'DONE'
 }
 
 write() {
+	echo 'Writing custom splash screens...'
+
 	for splash in "$CONF_DIR"/*.png; do
 		splash="${splash##*/}"
 		printf '%s...' "$splash"
@@ -79,6 +85,8 @@ write() {
 		cp -a -f "$CONF_DIR/$splash" "$SYS_DIR"
 		echo 'OK'
 	done
+
+	echo 'DONE'
 }
 
 if [ ! -d "$BACKUP_DIR" ]; then
@@ -99,15 +107,11 @@ for arg in "$@"; do
 		exit
 		;;
 	-r | --restore)
-		echo 'Restoring splash screens from backup...'
 		restore
-		echo 'DONE'
 		exit
 		;;
 	-w | --write)
-		echo 'Writing custom splash screens...'
 		write
-		echo 'DONE'
 		exit
 		;;
 	esac
