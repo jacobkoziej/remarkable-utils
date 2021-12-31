@@ -17,6 +17,9 @@
 
 set -eou pipefail
 
+REMARKABLE_UTILS_VERSION='@REMARKABLE_UTILS_VERSION@'
+SPLASH_VERSION='0.1.0'
+
 SYS_DIR='/usr/share/remarkable'
 CONF_DIR="${REMARKABLE_UTILS_DOTDIR:="$HOME/.remarkable-utils"}/splash"
 BACKUP_DIR="$CONF_DIR/backup"
@@ -27,6 +30,20 @@ backup() {
 
 copyright() {
 	head -n 16 "$0" | tail -n +2 - | cut -c3- -
+}
+
+info() {
+	head -n 4 "$0" | tail -n +2 - | cut -c3- -
+	cat <<EOF
+This program is bundled as a part of \`remarkable-utils'
+upstream: <git.jacobkoziej.xyz/remarkable-utils>
+remarkable-utils version: $REMARKABLE_UTILS_VERSION
+splash version: $SPLASH_VERSION
+
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions; see \`-c' for details.
+EOF
 }
 
 restore() {
@@ -64,6 +81,10 @@ for arg in "$@"; do
 	case $arg in
 	-c | --copyright)
 		copyright
+		exit
+		;;
+	-i | --info)
+		info
 		exit
 		;;
 	-r | --restore)
