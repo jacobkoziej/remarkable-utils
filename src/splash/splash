@@ -17,7 +17,7 @@
 
 set -eou pipefail
 
-SYS_DIR="/usr/share/remarkable"
+SYS_DIR='/usr/share/remarkable'
 CONF_DIR="${REMARKABLE_UTILS_DOTDIR:="$HOME/.remarkable-utils"}/splash"
 BACKUP_DIR="$CONF_DIR/backup"
 
