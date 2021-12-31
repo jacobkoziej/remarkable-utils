@@ -25,6 +25,10 @@ backup() {
 	cp -a "$SYS_DIR"/*.png "$BACKUP_DIR"
 }
 
+copyright() {
+	head -n 16 "$0" | tail -n +2 - | cut -c3- -
+}
+
 restore() {
 	cp -a -f "$BACKUP_DIR"/*.png "$SYS_DIR"
 }
@@ -58,6 +62,10 @@ fi
 
 for arg in "$@"; do
 	case $arg in
+	-c | --copyright)
+		copyright
+		exit
+		;;
 	-r | --restore)
 		printf 'Restoring splash screens from backup...'
 		restore
