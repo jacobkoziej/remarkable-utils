@@ -47,7 +47,18 @@ EOF
 }
 
 restore() {
-	cp -a -f "$BACKUP_DIR"/*.png "$SYS_DIR"
+	for splash in "$BACKUP_DIR"/*.png; do
+		splash="${splash##*/}"
+		printf '%s...' "$splash"
+
+		if cmp -s "$BACKUP_DIR/$splash" "$SYS_DIR/$splash"; then
+			echo 'SKIPPING'
+			continue
+		fi
+
+		cp -a -f "$BACKUP_DIR/$splash" "$SYS_DIR"
+		echo 'OK'
+	done
 }
 
 write() {
@@ -88,9 +99,9 @@ for arg in "$@"; do
 		exit
 		;;
 	-r | --restore)
-		printf 'Restoring splash screens from backup...'
+		echo 'Restoring splash screens from backup...'
 		restore
-		echo 'OK'
+		echo 'DONE'
 		exit
 		;;
 	-w | --write)
