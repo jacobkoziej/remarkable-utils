@@ -25,7 +25,23 @@ CONF_DIR="${REMARKABLE_UTILS_DOTDIR:="$HOME/.remarkable-utils"}/splash"
 BACKUP_DIR="$CONF_DIR/backup"
 
 backup() {
-	cp -a "$SYS_DIR"/*.png "$BACKUP_DIR"
+	echo 'Creating backup...'
+
+	mkdir -p "$BACKUP_DIR"
+	for splash in "$SYS_DIR"/*.png; do
+		splash="${splash##*/}"
+		printf '%s...' "$splash"
+
+		if [ -f "$BACKUP_DIR/$splash" ]; then
+			echo 'SKIPPING'
+			continue
+		fi
+
+		cp -a -f "$SYS_DIR/$splash" "$BACKUP_DIR"
+		echo 'OK'
+	done
+
+	echo 'DONE'
 }
 
 backup_err() {
@@ -99,6 +115,10 @@ write() {
 
 for arg in "$@"; do
 	case $arg in
+	-b | --backup)
+		backup
+		exit
+		;;
 	-c | --copyright)
 		copyright
 		exit
