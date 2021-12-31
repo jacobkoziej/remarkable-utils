@@ -25,9 +25,24 @@ backup() {
 	cp -a "$SYS_DIR"/*.png -t "$BACKUP_DIR"
 }
 
+restore() {
+	cp -a -f "$BACKUP_DIR"/*.png -t "$SYS_DIR"
+}
+
 if [ ! -d "$BACKUP_DIR" ]; then
 	printf 'No backup found, creating a backup...'
 	mkdir -p "$BACKUP_DIR"
 	backup
 	echo 'OK'
 fi
+
+for arg in "$@"; do
+	case $arg in
+	-r | --restore)
+		printf 'Restoring splash screens from backup...'
+		restore
+		echo 'OK'
+		exit
+		;;
+	esac
+done
