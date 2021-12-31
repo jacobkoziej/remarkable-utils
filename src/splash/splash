@@ -89,6 +89,17 @@ restore() {
 	echo 'DONE'
 }
 
+unknown() {
+	cat >&2 <<EOF
+ERROR: $(if [ "$#" -ge "1" ]; then
+		echo "unknown option \`$1'"
+	else
+		echo 'no option passed'
+	fi)
+See \`-h' for usage information.
+EOF
+}
+
 write() {
 	echo 'Writing custom splash screens...'
 
@@ -137,5 +148,12 @@ for arg in "$@"; do
 		write
 		exit
 		;;
+	*)
+		unknown "$arg"
+		exit 1
+		;;
 	esac
 done
+
+unknown
+exit 1
