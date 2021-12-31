@@ -108,6 +108,7 @@ for arg in "$@"; do
 		exit
 		;;
 	-r | --restore)
+		test -d "$BACKUP_DIR" || backup_err
 		restore
 		exit
 		;;
