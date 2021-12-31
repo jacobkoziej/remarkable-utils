@@ -29,6 +29,18 @@ restore() {
 	cp -a -f "$BACKUP_DIR"/*.png "$SYS_DIR"
 }
 
+write() {
+	for splash in "$CONF_DIR"/*.png; do
+		splash="${splash##*/}"
+
+		if [ -f "$BACKUP_DIR/$splash" ]; then
+			printf '%s...' "$splash"
+			cp -a -f "$CONF_DIR/$splash" "$SYS_DIR"
+			echo 'OK'
+		fi
+	done
+}
+
 if [ ! -d "$BACKUP_DIR" ]; then
 	printf 'No backup found, creating a backup...'
 	mkdir -p "$BACKUP_DIR"
@@ -42,6 +54,12 @@ for arg in "$@"; do
 		printf 'Restoring splash screens from backup...'
 		restore
 		echo 'OK'
+		exit
+		;;
+	-w | --write)
+		echo 'Writing custom splash screens...'
+		write
+		echo 'DONE'
 		exit
 		;;
 	esac
