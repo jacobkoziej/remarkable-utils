@@ -72,7 +72,7 @@ write() {
 		splash="${splash##*/}"
 		printf '%s...' "$splash"
 
-		if [ ! -f "$BACKUP_DIR/$splash" ]; then
+		if [ ! -f "$SYS_DIR/$splash" ]; then
 			echo 'NOT FOUND'
 			continue
 		fi
