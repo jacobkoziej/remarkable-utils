@@ -32,12 +32,20 @@ restore() {
 write() {
 	for splash in "$CONF_DIR"/*.png; do
 		splash="${splash##*/}"
+		printf '%s...' "$splash"
 
-		if [ -f "$BACKUP_DIR/$splash" ]; then
-			printf '%s...' "$splash"
-			cp -a -f "$CONF_DIR/$splash" "$SYS_DIR"
-			echo 'OK'
+		if [ ! -f "$BACKUP_DIR/$splash" ]; then
+			echo 'NOT FOUND'
+			continue
 		fi
+
+		if cmp -s "$CONF_DIR/$splash" "$SYS_DIR/$splash"; then
+			echo 'SKIPPING'
+			continue
+		fi
+
+		cp -a -f "$CONF_DIR/$splash" "$SYS_DIR"
+		echo 'OK'
 	done
 }
 
