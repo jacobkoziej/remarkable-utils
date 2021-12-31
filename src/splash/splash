@@ -28,6 +28,14 @@ backup() {
 	cp -a "$SYS_DIR"/*.png "$BACKUP_DIR"
 }
 
+backup_err() {
+	cat >&2 <<EOF
+ERROR: no backup found in \`$BACKUP_DIR'
+Please make a backup before proceeding.
+EOF
+	exit 1
+}
+
 copyright() {
 	head -n 16 "$0" | tail -n +2 - | cut -c3- -
 }
@@ -89,13 +97,6 @@ write() {
 	echo 'DONE'
 }
 
-if [ ! -d "$BACKUP_DIR" ]; then
-	printf 'No backup found, creating a backup...'
-	mkdir -p "$BACKUP_DIR"
-	backup
-	echo 'OK'
-fi
-
 for arg in "$@"; do
 	case $arg in
 	-c | --copyright)
@@ -111,6 +112,7 @@ for arg in "$@"; do
 		exit
 		;;
 	-w | --write)
+		test -d "$BACKUP_DIR" || backup_err
 		write
 		exit
 		;;
