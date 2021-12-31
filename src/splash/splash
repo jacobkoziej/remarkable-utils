@@ -22,11 +22,11 @@ CONF_DIR="${REMARKABLE_UTILS_DOTDIR:="$HOME/.remarkable-utils"}/splash"
 BACKUP_DIR="$CONF_DIR/backup"
 
 backup() {
-	cp -a "$SYS_DIR"/*.png -t "$BACKUP_DIR"
+	cp -a "$SYS_DIR"/*.png "$BACKUP_DIR"
 }
 
 restore() {
-	cp -a -f "$BACKUP_DIR"/*.png -t "$SYS_DIR"
+	cp -a -f "$BACKUP_DIR"/*.png "$SYS_DIR"
 }
 
 if [ ! -d "$BACKUP_DIR" ]; then
