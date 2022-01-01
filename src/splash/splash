@@ -1,0 +1,194 @@
+#!/bin/sh
+# splash -- customize splash screens
+# Copyright (C) 2021  Jacob Koziej <jacobkoziej@gmail.com>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+set -eou pipefail
+
+REMARKABLE_UTILS_VERSION='@REMARKABLE_UTILS_VERSION@'
+SPLASH_VERSION='0.1.0'
+
+SYS_DIR='/usr/share/remarkable'
+CONF_DIR="${REMARKABLE_UTILS_DOTDIR:="$HOME/.remarkable-utils"}/splash"
+BACKUP_DIR="$CONF_DIR/backup"
+
+backup() {
+	echo 'Creating backup...'
+
+	mkdir -p "$BACKUP_DIR"
+	for splash in "$SYS_DIR"/*.png; do
+		splash="${splash##*/}"
+		printf '%s...' "$splash"
+
+		if [ -f "$BACKUP_DIR/$splash" ]; then
+			echo 'SKIPPING'
+			continue
+		fi
+
+		cp -a -f "$SYS_DIR/$splash" "$BACKUP_DIR"
+		echo 'OK'
+	done
+
+	echo 'DONE'
+}
+
+backup_err() {
+	cat >&2 <<EOF
+ERROR: no backup found in \`$BACKUP_DIR'
+Please make a backup before proceeding.
+EOF
+	exit 1
+}
+
+copyright() {
+	head -n 16 "$0" | tail -n +2 - | cut -c3- -
+}
+
+info() {
+	head -n 4 "$0" | tail -n +2 - | cut -c3- -
+	cat <<EOF
+This program is bundled as a part of \`remarkable-utils'
+upstream: <git.jacobkoziej.xyz/remarkable-utils>
+remarkable-utils version: $REMARKABLE_UTILS_VERSION
+splash version: $SPLASH_VERSION
+
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it
+under certain conditions; see \`-c' for details.
+EOF
+}
+
+restore() {
+	echo 'Restoring splash screens from backup...'
+
+	for splash in "$BACKUP_DIR"/*.png; do
+		splash="${splash##*/}"
+		printf '%s...' "$splash"
+
+		if cmp -s "$BACKUP_DIR/$splash" "$SYS_DIR/$splash"; then
+			echo 'SKIPPING'
+			continue
+		fi
+
+		cp -a -f "$BACKUP_DIR/$splash" "$SYS_DIR"
+		echo 'OK'
+	done
+
+	echo 'DONE'
+}
+
+unknown() {
+	cat >&2 <<EOF
+ERROR: $(if [ "$#" -ge "1" ]; then
+		echo "unknown option \`$1'"
+	else
+		echo 'no option passed'
+	fi)
+See \`-h' for usage information.
+EOF
+}
+
+usage() {
+	cat <<EOF
+splash [OPTION]
+Customize splash screens.
+
+Configuration is found under \`$CONF_DIR'
+Backups are found under \`$BACKUP_DIR'
+
+Actions that require modifying any system files require a backup to
+exist.  To create a backup run the program with the \`-b' or \`--backup'
+option.  Files that already exist in the backup directory will not be
+overwritten by subsequent backups.
+
+To customize splash screens, replace the associated splash screen file
+in the configuration directory and perform a write operation with the
+\`-w' or \`--write' option.  Files that do not exist in the system
+directory will be ignored and files that are identical will be skipped.
+
+To restore splash screen, run the program with the \`-r' or \`--restore'
+option.  Files that are identical in the system directory will be
+skipped.
+
+  -b, --backup       perform a backup of system splash screens
+  -c, --copyright    display copyright information
+  -h, --help         display usage infromation
+  -i, --info         display program information
+  -r, --restore      restore system splash screens from backup
+  -w, --write        write custom splash screens to the system
+EOF
+}
+
+write() {
+	echo 'Writing custom splash screens...'
+
+	for splash in "$CONF_DIR"/*.png; do
+		splash="${splash##*/}"
+		printf '%s...' "$splash"
+
+		if [ ! -f "$SYS_DIR/$splash" ]; then
+			echo 'NOT FOUND'
+			continue
+		fi
+
+		if cmp -s "$CONF_DIR/$splash" "$SYS_DIR/$splash"; then
+			echo 'SKIPPING'
+			continue
+		fi
+
+		cp -a -f "$CONF_DIR/$splash" "$SYS_DIR"
+		echo 'OK'
+	done
+
+	echo 'DONE'
+}
+
+for arg in "$@"; do
+	case $arg in
+	-b | --backup)
+		backup
+		exit
+		;;
+	-c | --copyright)
+		copyright
+		exit
+		;;
+	-h | --help)
+		usage
+		exit
+		;;
+	-i | --info)
+		info
+		exit
+		;;
+	-r | --restore)
+		test -d "$BACKUP_DIR" || backup_err
+		restore
+		exit
+		;;
+	-w | --write)
+		test -d "$BACKUP_DIR" || backup_err
+		write
+		exit
+		;;
+	*)
+		unknown "$arg"
+		exit 1
+		;;
+	esac
+done
+
+unknown
+exit 1
