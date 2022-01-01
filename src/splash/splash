@@ -100,6 +100,37 @@ See \`-h' for usage information.
 EOF
 }
 
+usage() {
+	cat <<EOF
+splash [OPTION]
+Customize splash screens.
+
+Configuration is found under \`$CONF_DIR'
+Backups are found under \`$BACKUP_DIR'
+
+Actions that require modifying any system files require a backup to
+exist.  To create a backup run the program with the \`-b' or \`--backup'
+option.  Files that already exist in the backup directory will not be
+overwritten by subsequent backups.
+
+To customize splash screens, replace the associated splash screen file
+in the configuration directory and perform a write operation with the
+\`-w' or \`--write' option.  Files that do not exist in the system
+directory will be ignored and files that are identical will be skipped.
+
+To restore splash screen, run the program with the \`-r' or \`--restore'
+option.  Files that are identical in the system directory will be
+skipped.
+
+  -b, --backup       perform a backup of system splash screens
+  -c, --copyright    display copyright information
+  -h, --help         display usage infromation
+  -i, --info         display program information
+  -r, --restore      restore system splash screens from backup
+  -w, --write        write custom splash screens to the system
+EOF
+}
+
 write() {
 	echo 'Writing custom splash screens...'
 
@@ -132,6 +163,10 @@ for arg in "$@"; do
 		;;
 	-c | --copyright)
 		copyright
+		exit
+		;;
+	-h | --help)
+		usage
 		exit
 		;;
 	-i | --info)
