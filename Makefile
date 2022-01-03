@@ -25,7 +25,7 @@ all: lint shellcheck
 
 .PHONY: lint
 lint:
-	shfmt -w -p -sr $(SHELLSCRIPTS)
+	shfmt -w -p -sr -fn $(SHELLSCRIPTS)
 
 .PHONY: shellcheck
 shellcheck:
