@@ -21,10 +21,10 @@ PREFIX ?= $(PWD)
 SHELLSCRIPTS = $(SRC)/splash/splash
 
 .PHONY: all
-all: lint shellcheck
+all: shfmt shellcheck
 
-.PHONY: lint
-lint:
+.PHONY: shfmt
+shfmt:
 	shfmt -w -p -sr -fn $(SHELLSCRIPTS)
 
 .PHONY: shellcheck
