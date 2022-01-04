@@ -18,7 +18,7 @@ SRC     = src
 BUILD  ?= build
 PREFIX ?= $(PWD)
 
-SHELLSCRIPTS = $(SRC)/splash/splash
+SHELLSCRIPTS = $(shell shfmt -f $(SRC))
 
 .PHONY: all
 all: shfmt shellcheck
