@@ -14,9 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-SRC     = src
-BUILD  ?= build
-PREFIX ?= $(PWD)
+SRC    = src
+BUILD ?= build
 
 SHELLSCRIPTS = $(shell shfmt -f $(SRC))
 
