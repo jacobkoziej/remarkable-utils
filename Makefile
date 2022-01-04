@@ -21,7 +21,10 @@ PREFIX ?= $(PWD)
 SHELLSCRIPTS = $(shell shfmt -f $(SRC))
 
 .PHONY: all
-all: shfmt shellcheck
+all: shfmt
+
+.PHONY: test
+test: shellcheck
 
 .PHONY: shfmt
 shfmt:
