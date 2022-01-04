@@ -1,5 +1,5 @@
 # Makefile
-# Copyright (C) 2021  Jacob Koziej <jacobkoziej@gmail.com>
+# Copyright (C) 2021-2022  Jacob Koziej <jacobkoziej@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
