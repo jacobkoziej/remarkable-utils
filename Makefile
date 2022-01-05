@@ -14,10 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-SRC    = $(shell ./tools/helper SRC)
-BUILD ?= $(shell ./tools/helper BUILD)
+SRC    = src
+BUILD ?= build
 
-SHELL_SCRIPTS = $(shell ./tools/helper SHELL_SCRIPTS)
+SHELLSCRIPTS = $(shell shfmt -f $(SRC))
 
 .PHONY: all
 all: shfmt
@@ -27,11 +27,11 @@ test: shellcheck
 
 .PHONY: shfmt
 shfmt:
-	shfmt -w -p -sr -fn $(SHELL_SCRIPTS)
+	shfmt -w -p -sr -fn $(SHELLSCRIPTS)
 
 .PHONY: shellcheck
 shellcheck:
-	shellcheck $(SHELL_SCRIPTS)
+	shellcheck $(SHELLSCRIPTS)
 
 .PHONY: clean
 clean:
