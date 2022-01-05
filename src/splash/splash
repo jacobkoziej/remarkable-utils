@@ -1,6 +1,6 @@
 #!/bin/sh
 # splash -- customize splash screens
-# Copyright (C) 2021  Jacob Koziej <jacobkoziej@gmail.com>
+# Copyright (C) 2021-2022  Jacob Koziej <jacobkoziej@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,8 @@ SYS_DIR='/usr/share/remarkable'
 CONF_DIR="${REMARKABLE_UTILS_DOTDIR:="$HOME/.remarkable-utils"}/splash"
 BACKUP_DIR="$CONF_DIR/backup"
 
-backup() {
+backup()
+{
 	echo 'Creating backup...'
 
 	mkdir -p "$BACKUP_DIR"
@@ -44,21 +45,24 @@ backup() {
 	echo 'DONE'
 }
 
-backup_err() {
-	cat >&2 <<EOF
+backup_err()
+{
+	cat >&2 << EOF
 ERROR: no backup found in \`$BACKUP_DIR'
 Please make a backup before proceeding.
 EOF
 	exit 1
 }
 
-copyright() {
+copyright()
+{
 	head -n 16 "$0" | tail -n +2 - | cut -c3- -
 }
 
-info() {
+info()
+{
 	head -n 4 "$0" | tail -n +2 - | cut -c3- -
-	cat <<EOF
+	cat << EOF
 This program is bundled as a part of \`remarkable-utils'
 upstream: <git.jacobkoziej.xyz/remarkable-utils>
 remarkable-utils version: $REMARKABLE_UTILS_VERSION
@@ -70,7 +74,8 @@ under certain conditions; see \`-c' for details.
 EOF
 }
 
-restore() {
+restore()
+{
 	echo 'Restoring splash screens from backup...'
 
 	for splash in "$BACKUP_DIR"/*.png; do
@@ -89,8 +94,9 @@ restore() {
 	echo 'DONE'
 }
 
-unknown() {
-	cat >&2 <<EOF
+unknown()
+{
+	cat >&2 << EOF
 ERROR: $(if [ "$#" -ge "1" ]; then
 		echo "unknown option \`$1'"
 	else
@@ -100,8 +106,9 @@ See \`-h' for usage information.
 EOF
 }
 
-usage() {
-	cat <<EOF
+usage()
+{
+	cat << EOF
 splash [OPTION]
 Customize splash screens.
 
@@ -131,7 +138,8 @@ skipped.
 EOF
 }
 
-write() {
+write()
+{
 	echo 'Writing custom splash screens...'
 
 	for splash in "$CONF_DIR"/*.png; do
