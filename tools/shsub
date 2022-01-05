@@ -1,5 +1,6 @@
-# Makefile
-# Copyright (C) 2021-2022  Jacob Koziej <jacobkoziej@gmail.com>
+#!/bin/sh
+# shsub -- make the appropriate variables substitutions
+# Copyright (C) 2022  Jacob Koziej <jacobkoziej@gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,30 +15,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-export REMARKABLE_UTILS_VERSION = 0.1.0
+set -eou pipefail
 
-export PROJECT_ROOT = $(shell pwd)
+PATTERNS="\
+s/@REMARKABLE_UTILS_VERSION@/$REMARKABLE_UTILS_VERSION/g; \
+"
 
-export SRC   = $(PROJECT_ROOT)/src
-export BUILD = $(PROJECT_ROOT)/build
+for script in $SHELL_SCRIPTS; do
+	# create necessary build directories
+	out="${script##$SRC}"
+	out="$BUILD/$out"
+	mkdir -p "${out%/*}"
 
-export SHELL_SCRIPTS = $(shell shfmt -f $(SRC))
-
-.PHONY: all
-all: shfmt
-	./tools/shsub
-
-.PHONY: test
-test: shellcheck
-
-.PHONY: shfmt
-shfmt:
-	shfmt -w -p -sr -fn $(SHELL_SCRIPTS)
-
-.PHONY: shellcheck
-shellcheck:
-	shellcheck $(SHELL_SCRIPTS)
-
-.PHONY: clean
-clean:
-	rm -rf $(BUILD)
+	sed "$PATTERNS" "$script" > "$out"
+	chmod +x "$out"
+done
