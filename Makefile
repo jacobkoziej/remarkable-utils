@@ -21,11 +21,19 @@ export PROJECT_ROOT = $(shell pwd)
 export SRC   = $(PROJECT_ROOT)/src
 export BUILD = $(PROJECT_ROOT)/build
 
+export PREFIX  ?= /usr/local
+export DESTDIR ?=
+
 export SHELL_SCRIPTS = $(shell shfmt -f $(SRC))
 
 .PHONY: all
 all: shfmt
 	./tools/shsub
+
+.PHONY: install-remarkable
+install-remarkable: all
+	install -D $(SHELL_SCRIPTS:$(SRC)%=$(BUILD)%) \
+	-t $(DESTDIR)$(PREFIX)/bin
 
 .PHONY: test
 test: shellcheck
