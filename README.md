@@ -1,5 +1,7 @@
 # remarkable-utils
 
+> reMarkable utilities hacked together by yours truly <3
+
 
 ## Copyright & Licensing
 
